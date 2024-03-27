@@ -17,14 +17,11 @@ Also bringing,
  ```C#
 public async UniTask PlayAudioClipInOrder(AudioClip clip, AudioConfigurationSO settings, bool hasToLoop, Vector3 position = default)
     {
-        // Cancel any ongoing playback sequence
         _cancellationTokenSource?.Cancel();
         _cancellationTokenSource = new CancellationTokenSource();
         
-        // Enqueue the new clip
         _playbackQueue.Enqueue((clip, settings, hasToLoop, position));
         
-        // If not currently playing anything, start the playback sequence
         if (!_audioSource.isPlaying)
         {
             await PlayQueuedClipsAsync(_cancellationTokenSource.Token);
@@ -51,7 +48,6 @@ public async UniTask PlayAudioClipInOrder(AudioClip clip, AudioConfigurationSO s
                 }
                 catch (OperationCanceledException)
                 {
-                    // Handle cancellation
                     _audioSource.Stop();
                     break;
                 }
@@ -85,7 +81,6 @@ public void PlayAudioCue(AudioCueSO audioCue, AudioConfigurationSO settings, Vec
 					soundEmitter.OnSoundFinishedPlaying += OnSoundEmitterFinishedPlaying;
 			}
 		}
-		//TODO: Save the SoundEmitters that were activated, to be able to stop them if needed
 	}
 ```
 
